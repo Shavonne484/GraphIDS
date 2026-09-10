@@ -114,7 +114,7 @@ def train_encoder(
                 "test_pr_auc": test_pr_auc,
             }
         )
-    chk = torch.load(checkpoint, weights_only=True)
+    chk = torch.load(checkpoint, weights_only=True, map_location=device)
     model.load_state_dict(chk["model_state_dict"])
     return model, chk["threshold"]
 

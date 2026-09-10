@@ -73,12 +73,15 @@ def main(run):
         lr=config.learning_rate,
     )
     checkpoint = config.checkpoint
-    if checkpoint is not None and os.path.exists(checkpoint):
+    if checkpoint is None:
+        checkpoint = f"checkpoints/GraphIDS_{config.dataset}_{config.seed}.ckpt"
+        os.makedirs(os.path.dirname(checkpoint), exist_ok=True)
+        start_epoch = 0
+    elif os.path.exists(checkpoint):
         print("Loading model from checkpoint")
         start_epoch, threshold = model.load_checkpoint(checkpoint, optimizer)
         run.config.epoch = start_epoch
     else:
-        checkpoint = f"checkpoints/GraphIDS_{config.dataset}_{config.seed}.ckpt"
         os.makedirs(os.path.dirname(checkpoint), exist_ok=True)
         start_epoch = 0
 
@@ -142,6 +145,7 @@ def main(run):
             run,
             config.patience,
             checkpoint,
+            device=device,
         )
 
     test_f1, test_pr_auc, errors, test_labels, prediction_time = test(
@@ -226,7 +230,7 @@ if __name__ == "__main__":
             "fraction": args.fraction,
         }
     if not args.wandb:
-        os.environ["WANDB_MODE"] = "offline"
+        os.environ.setdefault("WANDB_MODE", "offline")
 
     run = wandb.init(project="GraphIDS", config=config)
 

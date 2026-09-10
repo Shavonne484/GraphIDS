@@ -1,4 +1,5 @@
 .vscode
+.DS_Store
 datasets
 wandb
 **/__pycache__/
@@ -10,3 +11,6 @@ outputs
 *.npz
 baselines/SAFE/SAFE.py
 checkpoints
+.codex-dgl-env/
+data/
+real-time model/outputs/

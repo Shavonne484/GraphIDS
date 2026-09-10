@@ -277,7 +277,8 @@ class GraphIDS(nn.Module):
         torch.save(checkpoint, path)
 
     def load_checkpoint(self, path, optimizer=None):
-        checkpoint = torch.load(path, weights_only=True)
+        map_location = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        checkpoint = torch.load(path, weights_only=True, map_location=map_location)
         self.load_state_dict(checkpoint["model_state_dict"])
         if optimizer and "optimizer_state_dict" in checkpoint:
             optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
